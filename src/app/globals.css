@@ -2,32 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+/* styles.css */
+.form-container {
+    @apply max-w-md mx-auto bg-white p-8 rounded-lg shadow-md;
   }
+  
+.form-field {
+  @apply mb-4;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.form-label {
+  @apply block text-gray-700 font-bold mb-2;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.form-input {
+  @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow;
+}
+
+.form-error {
+  @apply text-red-500 text-xs italic;
+}
+
+.form-button {
+  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow;
+}
+
+.list-container {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-3;
+  @apply mx-auto w-3/5;
+}
+
+.card {
+  @apply bg-white border border-gray-300 rounded-lg shadow-md p-4 w-44;
+  @apply mb-4;
+}
+
+.card-field {
+  @apply mb-2;
+}
+
+.card-field strong {
+  @apply block mb-1;
+}
+
+.card-actions {
+  @apply flex justify-between mt-4;
+}
+
+.update-button {
+  @apply bg-blue-400 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow;
+}
+
+.delete-button {
+  @apply bg-red-400 hover:bg-red-600 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow;
+}
+
+/* Modal styles */
+/* Modal styles */
+.modal {
+  @apply fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm;
+}
+
+.modal-content {
+  @apply bg-white p-6 rounded-lg shadow-lg;
+  @apply max-h-screen overflow-y-auto; /* Add scrollbar for overflow content */
 }
