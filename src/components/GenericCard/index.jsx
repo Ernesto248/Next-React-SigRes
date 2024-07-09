@@ -26,7 +26,7 @@ const GenericCard = ({ fields, item, onUpdate, onDelete }) => {
           className="delete-button"
           onClick={(e) => {
             e.stopPropagation(); // Prevent triggering the card click event
-            onDelete(item.id);
+            onDelete(item);
           }}
         >
           Delete

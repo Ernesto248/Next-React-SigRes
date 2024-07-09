@@ -3,11 +3,16 @@ import React from "react";
 import GenericForm from "@/components/GenericForm";
 import { useGlobalContext } from "@/context/GlobalContext";
 
-const UpdateModal = ({ isOpen, fields, validationSchema }) => {
+const UpdateModal = ({
+  idToUse,
+  isOpen,
+  fields,
+  validationSchema,
+  onSubmit,
+}) => {
   if (!isOpen) return null;
 
-  const { handleCloseUpdateModal, selectedItem, handleConfirmUpdate } =
-    useGlobalContext();
+  const { handleCloseUpdateModal, selectedItem } = useGlobalContext();
 
   return (
     <div className="modal">
@@ -17,8 +22,9 @@ const UpdateModal = ({ isOpen, fields, validationSchema }) => {
           fields={fields}
           initialValues={selectedItem}
           validationSchema={validationSchema}
-          onSubmit={(values) => {
-            handleConfirmUpdate(values);
+          onSubmit={async (values) => {
+            console.log(selectedItem[idToUse]);
+            await onSubmit(selectedItem[idToUse], values);
             handleCloseUpdateModal();
           }}
         />

@@ -1,9 +1,25 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import GenericForm from "@/components/GenericForm";
-import React from "react";
 import validationSchema from "@/schemas/estudentSchema";
 
 function Estudiante() {
+  const [cuartos, setCuartos] = useState([]);
+
+  useEffect(() => {
+    const fetchCuartos = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/cuarto/list/");
+        const data = await response.json();
+        setCuartos(data);
+      } catch (error) {
+        console.error("Error fetching cuartos:", error);
+      }
+    };
+
+    fetchCuartos();
+  }, []);
+
   const fields = [
     {
       name: "nombre",
@@ -44,8 +60,8 @@ function Estudiante() {
     {
       name: "cuarto",
       label: "Cuarto",
-      type: "text",
-      placeholder: "Inserta tu cuarto",
+      type: "select",
+      placeholder: "Selecciona tu cuarto",
     },
   ];
 
@@ -59,10 +75,31 @@ function Estudiante() {
     cuarto: "",
   };
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    // Handle form submission
-    console.log(values);
-    setSubmitting(false);
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/estudiante/add/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Success:", data);
+      window.location.href = "http://localhost:3000/estudiante/list/";
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -72,6 +109,10 @@ function Estudiante() {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
         initialValues={initialValues}
+        comboBoxOptions={cuartos.map((cuarto) => ({
+          value: cuarto.codigo,
+          label: cuarto.codigo,
+        }))}
       />
     </div>
   );

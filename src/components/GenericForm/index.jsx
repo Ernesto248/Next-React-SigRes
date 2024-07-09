@@ -3,7 +3,13 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
-const GenericForm = ({ fields, initialValues, validationSchema, onSubmit }) => {
+const GenericForm = ({
+  fields,
+  initialValues,
+  validationSchema,
+  onSubmit,
+  comboBoxOptions,
+}) => {
   return (
     <div className="form-container">
       <Formik
@@ -19,12 +25,25 @@ const GenericForm = ({ fields, initialValues, validationSchema, onSubmit }) => {
                 <label htmlFor={field.name} className="form-label">
                   {field.label}
                 </label>
-                <Field
-                  type={field.type}
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  className="form-input"
-                />
+                {field.type === "select" ? (
+                  <Field as="select" name={field.name} className="form-input">
+                    <option value="" label="Selecciona una opcion" />
+                    {comboBoxOptions.map((option) => (
+                      <option
+                        key={option.value}
+                        value={option.value}
+                        label={option.label}
+                      />
+                    ))}
+                  </Field>
+                ) : (
+                  <Field
+                    type={field.type}
+                    name={field.name}
+                    placeholder={field.placeholder}
+                    className="form-input"
+                  />
+                )}
                 <ErrorMessage
                   name={field.name}
                   component="div"

@@ -67,3 +67,15 @@
   @apply bg-white p-6 rounded-lg shadow-lg;
   @apply max-h-screen overflow-y-auto; /* Add scrollbar for overflow content */
 }
+
+.searchbar-container {
+  @apply w-3/5 mb-4 mx-auto flex justify-between items-center;
+}
+
+.search-bar {
+  @apply w-4/5 my-4 mx-auto;
+}
+
+.search-input {
+  @apply w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}

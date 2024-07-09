@@ -1,57 +1,94 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import GenericCard from "@/components/GenericCard";
 import DeleteModal from "@/components/DeleteModal";
 import UpdateModal from "@/components/UpdateModal";
 import validationSchema from "@/schemas/cuartoSchema";
 import { useGlobalContext } from "@/context/GlobalContext";
 import DetailModal from "@/components/DetailModal";
+import SearchBar from "@/components/SearchBar";
+import AddButton from "@/components/AddButton";
 
 const CuartoList = () => {
-  const fields = [
-    { name: "codigo", label: "Codigo" },
-    { name: "capacidad", label: "Capacidad" },
-    { name: "ocupacion", label: "Ocupacion" },
-  ];
-
-  const cuartos = [
-    { id: 1, codigo: "jj-3-x", capacidad: 6, ocupacion: 3 },
-    { id: 2, codigo: "jj-3-x", capacidad: 6, ocupacion: 3 },
-    { id: 3, codigo: "jj-3-x", capacidad: 6, ocupacion: 3 },
-    { id: 4, codigo: "jj-3-x", capacidad: 6, ocupacion: 3 },
-    { id: 5, codigo: "jj-3-x", capacidad: 6, ocupacion: 3 },
-    { id: 6, codigo: "jj-3-x", capacidad: 6, ocupacion: 3 },
-    { id: 7, codigo: "jj-3-x", capacidad: 6, ocupacion: 3 },
-    { id: 8, codigo: "jj-3-x", capacidad: 6, ocupacion: 3 },
-    { id: 9, codigo: "jj-3-x", capacidad: 6, ocupacion: 3 },
-  ];
-
   const {
+    items: cuartos = [],
+    filteredItems: filteredCuartos = [],
     isDeleteModalOpen,
     isUpdateModalOpen,
     isDetailModalOpen,
     handleDeleteClick,
     handleUpdateClick,
+    handleCloseDeleteModal,
+    handleDeleteItem,
+    handleUpdateItem,
+    handleSearch,
+    handleSuccess,
   } = useGlobalContext();
 
+  const fields = [
+    { name: "codigo", label: "Codigo" },
+    { name: "capacidad", label: "Capacidad" },
+    { name: "ocupacion", label: "Ocupacion" },
+    { name: "dormitorioID", label: "Nro de Dormitorio" },
+  ];
+
+  const cardFields = [
+    { name: "codigo", label: "Codigo" },
+    { name: "capacidad", label: "Capacidad" },
+    { name: "ocupacion", label: "Ocupacion" },
+  ];
+
+  useEffect(() => {
+    handleSuccess("http://127.0.0.1:8000/api/cuarto/list/");
+  }, []);
+
   return (
-    <div className="list-container">
-      {cuartos.map((cuarto, index) => (
-        <GenericCard
-          key={index}
-          fields={fields}
-          item={cuarto}
-          onDelete={handleDeleteClick}
-          onUpdate={handleUpdateClick}
+    <div>
+      <div className="searchbar-container">
+        <SearchBar
+          onSearch={(term) =>
+            handleSearch(term, ["codigo", "capacidad", "ocupacion"])
+          }
         />
-      ))}
-      <DeleteModal isOpen={isDeleteModalOpen} />
-      <UpdateModal
-        isOpen={isUpdateModalOpen}
-        fields={fields}
-        validationSchema={validationSchema}
-      />
-      <DetailModal isOpen={isDetailModalOpen} fields={fields} />
+        <AddButton url="/cuarto/add" />
+      </div>
+      <div className="list-container">
+        {(filteredCuartos || []).map((cuarto) => (
+          <div key={cuarto.id}>
+            <GenericCard
+              fields={cardFields}
+              item={cuarto}
+              onDelete={() => handleDeleteClick(cuarto)}
+              onUpdate={() => handleUpdateClick(cuarto)}
+            />
+          </div>
+        ))}
+        <DeleteModal
+          idToUse="codigo"
+          isOpen={isDeleteModalOpen}
+          onConfirmDelete={(id) =>
+            handleDeleteItem(
+              `http://127.0.0.1:8000/api/cuarto/delete/?codigo=${id}`,
+              `http://127.0.0.1:8000/api/cuarto/list/`
+            )
+          }
+          onClose={handleCloseDeleteModal}
+        />
+        <UpdateModal
+          idToUse="codigo"
+          isOpen={isUpdateModalOpen}
+          fields={fields}
+          validationSchema={validationSchema}
+          onSubmit={(id, values) =>
+            handleUpdateItem(
+              `http://127.0.0.1:8000/api/cuarto/update/?codigo=${id}`,
+              `http://127.0.0.1:8000/api/cuarto/list/`,
+              values
+            )
+          }
+        />
+        <DetailModal isOpen={isDetailModalOpen} fields={fields} />
+      </div>
     </div>
   );
 };

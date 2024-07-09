@@ -39,13 +39,13 @@ export default function NavBar() {
             Home
           </Link>
           <Link
-            href="/cuarto"
+            href="/cuarto/list/"
             className="block mt-2 lg:inline-block lg:mt-0 text-white hover:text-gray-400"
           >
             Cuarto
           </Link>
           <Link
-            href="/estudiante/list"
+            href="/estudiante/list/"
             className="block mt-2 lg:inline-block lg:mt-0 text-white hover:text-gray-400"
           >
             Estudiante

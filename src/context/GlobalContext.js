@@ -1,17 +1,91 @@
 "use client";
-import React, { createContext, useState, useContext } from "react";
+import { useRouter } from "next/router";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
+  const [items, setItems] = useState([]); // Ensure items is an array
+  const [filteredItems, setFilteredItems] = useState([]); // Ensure filteredItems is an array
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const handleDeleteClick = (itemId) => {
-    setSelectedItemId(itemId);
+  const fetchItems = async (url) => {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setItems(data); // Ensure data is an array
+      setFilteredItems(data); // Ensure data is an array
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    }
+  };
+
+  const handleSuccess = (url) => {
+    fetchItems(url);
+  };
+
+  //Ya esta funcion puede ser reutilizada para cualquier delete
+  const handleDeleteItem = async (url, redirectUrl) => {
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      console.log("Delete Success");
+      handleSuccess(redirectUrl); // Ensure the list is refreshed after deletion
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
+  //Ya esta funcion puede ser reutilizada para cualquier update
+  const handleUpdateItem = async (url, redirectUrl, values) => {
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Update Success:", data);
+      handleSuccess(redirectUrl); // Ensure the list is refreshed after update
+    } catch (error) {
+      console.error("Error updating item:", error);
+    }
+  };
+
+  const handleSearch = (searchTerm, fields) => {
+    const filtered = items.filter((item) =>
+      fields.some((field) => {
+        const fieldValue = item[field];
+        if (typeof fieldValue === "string" || typeof fieldValue === "number") {
+          return fieldValue
+            .toString()
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+        }
+        return false;
+      })
+    );
+    setFilteredItems(filtered);
+  };
+
+  const handleDeleteClick = (item) => {
+    setSelectedItem(item);
     setIsDeleteModalOpen(true);
   };
 
@@ -20,14 +94,9 @@ export const GlobalProvider = ({ children }) => {
     setIsUpdateModalOpen(true);
   };
 
-  const handleCardClick = (item) => {
-    setSelectedItem(item);
-    setIsDetailModalOpen(true);
-  };
-
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setSelectedItemId(null);
+    setSelectedItem(null);
   };
 
   const handleCloseUpdateModal = () => {
@@ -40,32 +109,30 @@ export const GlobalProvider = ({ children }) => {
     setSelectedItem(null);
   };
 
-  const handleConfirmDelete = (itemId) => {
-    console.log(`Deleting item with ID: ${itemId}`);
-    handleCloseDeleteModal();
-  };
-
-  const handleConfirmUpdate = (updatedItem) => {
-    console.log(`Updating item:`, updatedItem);
-    handleCloseUpdateModal();
+  const handleCardClick = (item) => {
+    setSelectedItem(item);
+    setIsDetailModalOpen(true);
   };
 
   return (
     <GlobalContext.Provider
       value={{
+        items,
+        filteredItems,
         isDeleteModalOpen,
         isUpdateModalOpen,
         isDetailModalOpen,
-        selectedItemId,
         selectedItem,
         handleDeleteClick,
         handleUpdateClick,
         handleCardClick,
-        handleCloseDeleteModal,
         handleCloseUpdateModal,
+        handleCloseDeleteModal,
         handleCloseDetailModal,
-        handleConfirmDelete,
-        handleConfirmUpdate,
+        handleDeleteItem,
+        handleUpdateItem,
+        handleSearch,
+        handleSuccess,
       }}
     >
       {children}
