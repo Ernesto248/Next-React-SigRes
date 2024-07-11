@@ -1,13 +1,10 @@
-//make a navigation component using Link from next/link with the links home cuarto estudiante
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaBars } from "react-icons/fa";
 
 export default function NavBar() {
-  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -36,7 +33,7 @@ export default function NavBar() {
             href="/"
             className="block mt-2 lg:inline-block lg:mt-0 text-white hover:text-gray-400"
           >
-            Home
+            Inicio
           </Link>
           <Link
             href="/cuarto/list/"

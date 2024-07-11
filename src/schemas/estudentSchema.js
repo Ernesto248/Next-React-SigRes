@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
-  nombre: Yup.string().required("Required"),
-  apellido: Yup.string().required("Required"),
+  nombre: Yup.string().required("Obligatorio"),
+  apellido: Yup.string().required("Obligatorio"),
   carnet_identidad: Yup.string()
     .matches(/^\d{11}$/, "Carnet de Identidad must be exactly 11 digits")
     .test(
@@ -23,11 +23,11 @@ const validationSchema = Yup.object({
         );
       }
     )
-    .required("Required"),
-  facultad: Yup.string().required("Required"),
-  carrera: Yup.string().required("Required"),
-  ano_academico: Yup.number().required("Required").min(1).max(6).integer(),
-  cuarto: Yup.string().required("Required"),
+    .required("Obligatorio"),
+  facultad: Yup.string().required("Obligatorio"),
+  carrera: Yup.string().required("Obligatorio"),
+  ano_academico: Yup.number().required("Obligatorio").min(1).max(6).integer(),
+  cuarto: Yup.string().required("Obligatorio"),
 });
 
 export default validationSchema;
