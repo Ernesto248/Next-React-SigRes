@@ -1,9 +1,27 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import GenericForm from "@/components/GenericForm";
-import React from "react";
 import cuartoValidationSchema from "@/schemas/cuartoSchema";
 
 function CuartoForm() {
+  const [dormitorios, setDormitorios] = useState([]);
+
+  useEffect(() => {
+    const fetchDormitorios = async () => {
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/dormitorio/list/"
+        );
+        const data = await response.json();
+        setDormitorios(data);
+      } catch (error) {
+        console.error("Error fetching dormitorios:", error);
+      }
+    };
+
+    fetchDormitorios();
+  }, []);
+
   const fields = [
     {
       name: "codigo",
@@ -25,9 +43,9 @@ function CuartoForm() {
     },
     {
       name: "dormitorioID",
-      label: "Id del dormitorio",
-      type: "number",
-      placeholder: "Inserta el id del dormitorio",
+      label: "Nro del dormitorio",
+      type: "select",
+      placeholder: "Selecciona el nro del dormitorio",
     },
   ];
 
@@ -71,6 +89,10 @@ function CuartoForm() {
         validationSchema={cuartoValidationSchema}
         onSubmit={handleSubmit}
         initialValues={initialValues}
+        comboBoxOptions={dormitorios.map((dormitorio) => ({
+          value: dormitorio.id,
+          label: dormitorio.id,
+        }))}
       />
     </div>
   );

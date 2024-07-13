@@ -4,8 +4,8 @@ const cuartoValidationSchema = Yup.object({
   codigo: Yup.string()
     .required("Obligatorio")
     .matches(
-      /^[A-Za-z]{3}-\d{3}$/,
-      "Debe seguir el formato lll-n-n-n(l=letra n=numero)"
+      /^[A-Za-z]{3}-\d-\d-\d$/,
+      "Debe seguir el formato lll-n-n-n   (l=letra n=numero)"
     )
     .test(
       "no-leading-whitespace",
@@ -26,6 +26,9 @@ const cuartoValidationSchema = Yup.object({
         return value <= this.parent.capacidad;
       }
     ),
+  dormitorioID: Yup.number()
+    .required("Obligatorio")
+    .min(1, "El ID del dormitorio debe ser un número positivo"),
 });
 
 export default cuartoValidationSchema;

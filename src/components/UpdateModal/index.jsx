@@ -4,10 +4,13 @@ import GenericForm from "@/components/GenericForm";
 import { useGlobalContext } from "@/context/GlobalContext";
 
 const UpdateModal = ({
+  title,
   idToUse,
   isOpen,
   fields,
   validationSchema,
+  toComboBox,
+  CBValue,
   onSubmit,
 }) => {
   if (!isOpen) return null;
@@ -16,8 +19,9 @@ const UpdateModal = ({
 
   return (
     <div className="modal">
+      {console.log(toComboBox)}
       <div className="modal-content">
-        <h2>Update Item</h2>
+        <h2>Actualizando: {title}</h2>
         <GenericForm
           fields={fields}
           initialValues={selectedItem}
@@ -27,6 +31,10 @@ const UpdateModal = ({
             await onSubmit(selectedItem[idToUse], values);
             handleCloseUpdateModal();
           }}
+          comboBoxOptions={(toComboBox || []).map((option) => ({
+            value: option[CBValue],
+            label: option[CBValue],
+          }))}
         />
         <button type="button" onClick={handleCloseUpdateModal}>
           Cancel

@@ -2,23 +2,10 @@
 import React, { useEffect, useState } from "react";
 import GenericForm from "@/components/GenericForm";
 import validationSchema from "@/schemas/estudentSchema";
+import { useGlobalContext } from "@/context/GlobalContext";
 
 function Estudiante() {
-  const [cuartos, setCuartos] = useState([]);
-
-  useEffect(() => {
-    const fetchCuartos = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/api/cuarto/list/");
-        const data = await response.json();
-        setCuartos(data);
-      } catch (error) {
-        console.error("Error fetching cuartos:", error);
-      }
-    };
-
-    fetchCuartos();
-  }, []);
+  const { cuartos } = useGlobalContext();
 
   const fields = [
     {

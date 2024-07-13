@@ -23,13 +23,14 @@ const CuartoList = () => {
     handleUpdateItem,
     handleSearch,
     handleSuccess,
+    dormitorios,
   } = useGlobalContext();
 
   const fields = [
     { name: "codigo", label: "Codigo" },
     { name: "capacidad", label: "Capacidad" },
     { name: "ocupacion", label: "Ocupacion" },
-    { name: "dormitorioID", label: "Nro de Dormitorio" },
+    { name: "dormitorioID", label: "Nro de Dormitorio", type: "select" },
   ];
 
   const cardFields = [
@@ -75,10 +76,13 @@ const CuartoList = () => {
           onClose={handleCloseDeleteModal}
         />
         <UpdateModal
+          title="Cuarto"
           idToUse="codigo"
           isOpen={isUpdateModalOpen}
           fields={fields}
           validationSchema={validationSchema}
+          toComboBox={dormitorios}
+          CBValue="id"
           onSubmit={(id, values) =>
             handleUpdateItem(
               `http://127.0.0.1:8000/api/cuarto/update/?codigo=${id}`,

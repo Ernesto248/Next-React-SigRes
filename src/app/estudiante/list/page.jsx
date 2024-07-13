@@ -23,6 +23,7 @@ const EstudianteList = () => {
     handleUpdateItem,
     handleSearch,
     handleSuccess,
+    cuartos,
   } = useGlobalContext();
 
   const fields = [
@@ -32,7 +33,7 @@ const EstudianteList = () => {
     { name: "facultad", label: "Facultad", type: "text" },
     { name: "carrera", label: "Carrera", type: "text" },
     { name: "ano_academico", label: "Año Académico", type: "number" },
-    { name: "cuarto", label: "Cuarto", type: "text" },
+    { name: "cuarto", label: "Cuarto", type: "select" },
   ];
 
   const cardFields = [
@@ -79,10 +80,13 @@ const EstudianteList = () => {
           onClose={handleCloseDeleteModal}
         />
         <UpdateModal
+          title="Estudiante"
           idToUse="carnet_identidad"
           isOpen={isUpdateModalOpen}
           fields={fields}
           validationSchema={validationSchema}
+          toComboBox={cuartos}
+          CBValue="codigo"
           onSubmit={(id, values) =>
             handleUpdateItem(
               `http://127.0.0.1:8000/api/estudiante/update/?carnet_identidad=${id}`,

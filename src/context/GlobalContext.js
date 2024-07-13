@@ -11,6 +11,38 @@ export const GlobalProvider = ({ children }) => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [cuartos, setCuartos] = useState([]);
+  const [dormitorios, setDormitorios] = useState([]);
+
+  const fetchCuartos = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/cuarto/list/");
+      const data = await response.json();
+      setCuartos(data);
+    } catch (error) {
+      console.error("Error fetching cuartos:", error);
+    }
+  };
+
+  const fetchDormitorios = async () => {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/dormitorio/list/"
+      );
+      const data = await response.json();
+      setDormitorios(data);
+    } catch (error) {
+      console.error("Error fetching cuartos:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCuartos();
+  }, []);
+
+  useEffect(() => {
+    fetchDormitorios();
+  }, []);
 
   const fetchItems = async (url) => {
     try {
@@ -123,6 +155,8 @@ export const GlobalProvider = ({ children }) => {
         isUpdateModalOpen,
         isDetailModalOpen,
         selectedItem,
+        cuartos,
+        dormitorios,
         handleDeleteClick,
         handleUpdateClick,
         handleCardClick,
